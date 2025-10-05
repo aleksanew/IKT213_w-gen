@@ -29,8 +29,10 @@ Average Total Time: 0.017 s
 Average Descriptor Memory: 0.19 MB
 
 Confusion Matrix (Data_Check)
+<img width="900" height="750" alt="confmat_orb" src="https://github.com/user-attachments/assets/91835b9e-e604-4841-9703-77470f63fb75" />
 
 Match Counts Plot (Data_Check)
+<img width="1800" height="600" alt="match_counts_orb" src="https://github.com/user-attachments/assets/26d4d482-fa33-4e1f-b33f-cf57907abec6" />
 
 Analysis:
 ORB_BF shows clear separation between same and different fingerprints.
@@ -46,8 +48,10 @@ Average Total Time: 0.064 s
 Average Descriptor Memory: 1.85 MB
 
 Confusion Matrix (Data_Check)
+<img width="900" height="750" alt="confmat_sift" src="https://github.com/user-attachments/assets/06ff28e5-8edb-4965-8cd4-742e12328f78" />
 
 Match Counts Plot (Data_Check)
+<img width="1800" height="600" alt="match_counts_sift" src="https://github.com/user-attachments/assets/cc752360-405e-47d0-95d6-c59eda833c6b" />
 
 Analysis:
 SIFT_FLANN finds more matches overall, often hundreds on same fingerprints.
