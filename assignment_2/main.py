@@ -3,8 +3,10 @@ import cv2
 import numpy as np
 
 def padding(image, border_width):
-    padded = cv2.copyMakeBorder(image, border_width, border_width, border_width, border_width, cv2.BORDER_CONSTANT)
-    return padded
+    return cv2.copyMakeBorder(
+        image, border_width, border_width, border_width, border_width,
+        borderType=cv2.BORDER_REFLECT
+    )
 
 def crop(image, x_0, x_1, y_0, y_1):
     h, w = image.shape[:2]
@@ -28,8 +30,7 @@ def hsv(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
 def hue_shifted(image, emptyPictureArray, hue):
-    shifted = (image.astype(np.uint16) + int(hue)) % 256
-    emptyPictureArray[:] = shifted.astype(np.uint8)
+    cv2.add(image, np.full_like(image, hue), dst=emptyPictureArray)
     return emptyPictureArray
 
 def smoothing(image):
