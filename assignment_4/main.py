@@ -24,6 +24,7 @@ def harris(image_path):
 def align(image_to_align, reference_image, max_features=10, good_match_percent=0.7):
     im1 = cv2.imread(reference_image, cv2.IMREAD_COLOR)
     im2 = cv2.imread(image_to_align, cv2.IMREAD_COLOR)
+    im2 = cv2.rotate(im2, cv2.ROTATE_90_CLOCKWISE)
 
     sift = cv2.SIFT_create(nfeatures=max_features)
 
@@ -37,14 +38,20 @@ def align(image_to_align, reference_image, max_features=10, good_match_percent=0
 
     matches = flann.knnMatch(des1, des2, k=2)
 
+    print(f"Total matches: {len(matches)}")
+
     good_matches = []
     for m, n in matches:
-        if m.distance < 0.7 * n.distance:
+        if m.distance < 0.9 * n.distance:
             good_matches.append(m)
+
+    print(f"Good matches: {len(good_matches)}")
 
     good_matches = sorted(good_matches, key = lambda x: x.distance)
     num_good = int(len(good_matches) * good_match_percent)
     good_matches = good_matches[:num_good]
+
+    print(f"Matches after good_match_percent: {len(good_matches)}")
 
     matched_img = cv2.drawMatches(im1, kp1, im2, kp2, good_matches, None, flags=2)
     matched_path = os.path.join(OUTPUT_DIR, "matched_image.png")
@@ -52,17 +59,21 @@ def align(image_to_align, reference_image, max_features=10, good_match_percent=0
 
     im2_aligned = im2.copy()
 
-    if len(good_matches) > 4:
+    if len(good_matches) >= 4:
         p1 = np.float32([kp1[m.queryIdx].pt for m in good_matches]).reshape(-1, 1, 2)
         p2 = np.float32([kp2[m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
 
         H, mask = cv2.findHomography(p2, p1, cv2.RANSAC, 5.0)
+
         height, width, _ = im1.shape
         im2_aligned = cv2.warpPerspective(im2, H, (width, height))
 
         aligned_path = os.path.join(OUTPUT_DIR, "aligned_image.png")
         cv2.imwrite(aligned_path, im2_aligned)
 
+        print("Homography applied")
+    else:
+        print("Not enough good matches")
 
     return im2_aligned, matched_img
 
